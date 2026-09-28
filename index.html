@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+.cforeset-widget{
+  --cforeset-blue:#6F86A3;
+  --cforeset-blue-light:#E8EDF3;
+  --cforeset-sage:#A9B7A3;
+  --cforeset-sage-light:#EDF1EA;
+  --cforeset-sand:#D9C8A7;
+  --cforeset-sand-light:#F3ECE0;
+  --cforeset-terracotta:#C77C67;
+  --cforeset-terracotta-light:#F4E4DF;
+  --cforeset-milk:#F7F6F1;
+  --cforeset-graphite:#2A2F33;
+  --cforeset-white:#FFFFFF;
+  --cforeset-muted:#687078;
+  --cforeset-border:#DDD9D1;
+  --cforeset-soft:#ECEAE4;
+  width:100%;
+  max-width:1160px;
+  margin:20px auto;
+  color:var(--cforeset-graphite);
+  font-family:Arial,Helvetica,sans-serif;
+  line-height:1.5;
+}
+.cforeset-widget,.cforeset-widget *,.cforeset-widget *::before,.cforeset-widget *::after{box-sizing:border-box}
+.cforeset-widget button,.cforeset-widget input,.cforeset-widget textarea{font:inherit}
+.cforeset-shell{overflow:hidden;border:1px solid var(--cforeset-border);border-radius:22px;background:var(--cforeset-milk);box-shadow:0 14px 34px rgba(42,47,51,.07)}
+.cforeset-top{padding:24px 32px 18px;border-bottom:1px solid var(--cforeset-border);background:linear-gradient(110deg,rgba(217,200,167,.34),rgba(247,246,241,.95) 48%,rgba(169,183,163,.19))}
+.cforeset-course-label{margin-bottom:5px;color:var(--cforeset-blue);font-size:12px;font-weight:900;letter-spacing:.05em;text-transform:uppercase}
+.cforeset-course-title{max-width:830px;margin:0;color:var(--cforeset-graphite);font-size:25px;line-height:1.2}
+.cforeset-progress-row{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:20px}
+.cforeset-progress{display:flex;flex:1;gap:6px}
+.cforeset-progress-item{height:6px;flex:1;border-radius:999px;background:#E6E1D7;transition:.2s ease}
+.cforeset-progress-item.cforeset-complete{background:var(--cforeset-sage)}
+.cforeset-progress-item.cforeset-current{background:var(--cforeset-blue)}
+.cforeset-progress-text{flex:0 0 auto;color:var(--cforeset-muted);font-size:13px;font-weight:700}
+.cforeset-restart-top{display:none;margin-top:13px}
+.cforeset-restart-top.cforeset-show{display:block}
+.cforeset-restart-link{padding:0;border:0;background:transparent;color:var(--cforeset-muted);font-size:13px;font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.cforeset-content{padding:31px 34px 36px}
+.cforeset-screen{display:none}
+.cforeset-screen.cforeset-active{display:block;animation:cforesetFade .22s ease}
+@keyframes cforesetFade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.cforeset-screen-head{margin-bottom:22px}
+.cforeset-screen-meta{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:7px;color:var(--cforeset-muted);font-size:12px;font-weight:800}
+.cforeset-time{padding:4px 8px;border-radius:999px;background:var(--cforeset-sand-light);color:#77684F}
+.cforeset-screen-head h3{margin:0 0 8px;color:var(--cforeset-graphite);font-size:28px;line-height:1.16}
+.cforeset-screen-head p{max-width:850px;margin:0;color:var(--cforeset-muted)}
+.cforeset-card{padding:20px;border:1px solid var(--cforeset-border);border-radius:16px;background:var(--cforeset-white)}
+.cforeset-actions{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:10px;margin-top:20px}
+.cforeset-actions-between{justify-content:space-between}
+.cforeset-btn{min-height:44px;padding:10px 17px;border:0;border-radius:11px;font-weight:800;cursor:pointer;transition:transform .12s ease,opacity .12s ease,background .12s ease}
+.cforeset-btn:hover:not(:disabled){transform:translateY(-1px)}
+.cforeset-btn:disabled{opacity:.4;cursor:not-allowed}
+.cforeset-btn-main{background:var(--cforeset-blue);color:#fff}
+.cforeset-btn-back{border:1px solid #C9B792;background:var(--cforeset-sand);color:var(--cforeset-graphite)}
+.cforeset-btn-soft{border:1px solid #92A08D;background:var(--cforeset-sage);color:var(--cforeset-graphite)}
+.cforeset-intro-note{margin-bottom:18px;padding:15px 17px;border-left:4px solid var(--cforeset-blue);border-radius:0 13px 13px 0;background:var(--cforeset-blue-light);color:var(--cforeset-graphite)}
+.cforeset-field-label{display:block;margin-bottom:7px;color:var(--cforeset-graphite);font-size:15px;font-weight:900}
+.cforeset-task-input-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;align-items:stretch}
+.cforeset-task-input{min-width:0;min-height:48px;padding:12px 14px;border:1px solid var(--cforeset-border);border-radius:12px;background:#fff;color:var(--cforeset-graphite)}
+.cforeset-task-input:focus{outline:none;border-color:var(--cforeset-blue);box-shadow:0 0 0 3px rgba(111,134,163,.12)}
+.cforeset-add-btn{width:48px;min-height:48px;padding:0;border:0;border-radius:12px;background:var(--cforeset-blue);color:#fff;font-size:25px;font-weight:400;cursor:pointer}
+.cforeset-presets{margin-top:20px;padding-top:18px;border-top:1px solid var(--cforeset-soft)}
+.cforeset-presets-title{margin-bottom:5px;color:var(--cforeset-graphite);font-size:15px;font-weight:900}
+.cforeset-presets-note{margin-bottom:14px;color:var(--cforeset-muted);font-size:13px}
+.cforeset-preset-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.cforeset-preset-group{padding:13px;border:1px solid #E3DDD2;border-radius:14px;background:#FCFBF8}
+.cforeset-preset-group-title{margin-bottom:9px;color:var(--cforeset-muted);font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.03em}
+.cforeset-preset-list{display:flex;flex-wrap:wrap;gap:7px}
+.cforeset-preset-btn{min-height:38px;padding:8px 10px;border:1px solid #D8D2C8;border-radius:10px;background:#fff;color:var(--cforeset-graphite);font-size:13px;font-weight:700;text-align:left;cursor:pointer;transition:.12s ease}
+.cforeset-preset-btn:hover{border-color:var(--cforeset-blue)}
+.cforeset-preset-btn.cforeset-selected{border-color:#8E9E88;background:var(--cforeset-sage-light)}
+.cforeset-preset-btn.cforeset-selected::before{content:"✓ ";color:#62705D;font-weight:900}
+.cforeset-task-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:16px}
+.cforeset-task-card{position:relative;min-width:0;padding:13px 38px 13px 14px;border:1px solid #DDD6C9;border-radius:12px;background:#fff;color:var(--cforeset-graphite);font-size:14px;font-weight:700;box-shadow:0 3px 9px rgba(42,47,51,.04)}
+.cforeset-task-remove{position:absolute;top:50%;right:9px;width:27px;height:27px;display:flex;align-items:center;justify-content:center;transform:translateY(-50%);padding:0;border:0;border-radius:50%;background:transparent;color:#8B8E8E;cursor:pointer;font-size:18px}
+.cforeset-count-note{min-height:20px;margin-top:10px;color:var(--cforeset-muted);font-size:13px}
+.cforeset-drag-card{padding:12px 13px;border:1px solid #DCD8D0;border-radius:12px;background:#fff;color:var(--cforeset-graphite);box-shadow:0 3px 9px rgba(42,47,51,.04);font-size:14px;font-weight:700;line-height:1.4;cursor:grab;transition:border-color .12s ease,background .12s ease,transform .12s ease,opacity .12s ease}
+.cforeset-drag-card:hover{transform:translateY(-1px)}
+.cforeset-drag-card:active{cursor:grabbing}
+.cforeset-drag-card.cforeset-selected{border:2px solid var(--cforeset-blue);background:var(--cforeset-blue-light)}
+.cforeset-muted-card{opacity:.72}
+.cforeset-source-tray{margin-bottom:17px;padding:15px;border:1px solid var(--cforeset-border);border-radius:15px;background:#fff}
+.cforeset-source-title{margin-bottom:10px;color:var(--cforeset-muted);font-size:12px;font-weight:900;text-transform:uppercase}
+.cforeset-source-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.cforeset-buckets{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.cforeset-bucket{min-width:0;min-height:205px;padding:12px;border:1px dashed #CDC7BD;border-radius:15px;background:rgba(255,255,255,.64);transition:.12s ease}
+.cforeset-bucket.cforeset-drop-hover,.cforeset-relevance-zone.cforeset-drop-hover,.cforeset-relevance-source.cforeset-drop-hover{border-style:solid;border-color:var(--cforeset-blue);box-shadow:inset 0 0 0 2px rgba(111,134,163,.1)}
+.cforeset-bucket-now{background:var(--cforeset-terracotta-light)}
+.cforeset-bucket-later{background:var(--cforeset-sand-light)}
+.cforeset-bucket-wait{background:var(--cforeset-sage-light)}
+.cforeset-bucket-delegate{background:var(--cforeset-blue-light)}
+.cforeset-bucket-drop{background:#F0EFEC}
+.cforeset-bucket-head{min-height:55px;margin-bottom:9px;border-bottom:1px solid rgba(42,47,51,.1)}
+.cforeset-bucket-title{display:block;margin-bottom:3px;color:var(--cforeset-graphite);font-size:14px;font-weight:900}
+.cforeset-bucket-subtitle{display:block;color:var(--cforeset-muted);font-size:11px;line-height:1.3}
+.cforeset-bucket-content{display:flex;flex-direction:column;gap:7px}
+.cforeset-step-note{margin-top:13px;color:var(--cforeset-muted);font-size:13px}
+.cforeset-now-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:20px}
+.cforeset-choice-card{width:100%;padding:15px;border:1px solid var(--cforeset-border);border-radius:13px;background:#fff;color:var(--cforeset-graphite);text-align:left;font-weight:800;cursor:pointer;transition:.15s ease}
+.cforeset-choice-card.cforeset-selected{border:2px solid var(--cforeset-blue);background:var(--cforeset-blue-light)}
+.cforeset-main-task{display:none;margin-bottom:18px;padding:17px 19px;border:1px solid #BBC8D7;border-radius:15px;background:var(--cforeset-blue-light)}
+.cforeset-main-task.cforeset-show{display:block}
+.cforeset-main-task-label{margin-bottom:5px;color:#566D88;font-size:12px;font-weight:900;text-transform:uppercase}
+.cforeset-main-task-text{color:var(--cforeset-graphite);font-size:18px;font-weight:800}
+.cforeset-decision-suggestions-wrap{display:none;margin:0 0 16px}
+.cforeset-decision-suggestions-wrap.cforeset-show{display:block}
+.cforeset-decision-suggestions-title{margin-bottom:8px;color:var(--cforeset-muted);font-size:13px;font-weight:800}
+.cforeset-decision-suggestions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.cforeset-suggestion-btn{min-height:68px;padding:11px 12px;border:1px solid #D7DCE2;border-radius:12px;background:#fff;color:var(--cforeset-graphite);text-align:left;font-size:13px;font-weight:700;line-height:1.38;cursor:pointer;transition:.12s ease}
+.cforeset-suggestion-btn:hover{border-color:var(--cforeset-blue);background:#F7F9FB}
+.cforeset-suggestion-btn.cforeset-selected{border:2px solid var(--cforeset-blue);background:var(--cforeset-blue-light)}
+.cforeset-textarea{display:block;width:100%;min-height:105px;padding:13px 14px;resize:vertical;border:1px solid var(--cforeset-border);border-radius:12px;background:#fff;color:var(--cforeset-graphite)}
+.cforeset-textarea:focus{outline:none;border-color:var(--cforeset-blue);box-shadow:0 0 0 3px rgba(111,134,163,.12)}
+.cforeset-hint{margin-top:9px;color:var(--cforeset-muted);font-size:13px}
+.cforeset-later-box{margin-top:15px;padding:13px 15px;border:1px solid #DDD6C9;border-radius:13px;background:var(--cforeset-sand-light)}
+.cforeset-later-box strong{color:#75664B}
+.cforeset-question-box{margin-bottom:18px;padding:18px 20px;border:1px solid #BAC6D4;border-radius:15px;background:var(--cforeset-blue-light)}
+.cforeset-question-label{margin-bottom:4px;color:#566D88;font-size:12px;font-weight:900;text-transform:uppercase}
+.cforeset-question-text{font-size:18px;font-weight:900}
+.cforeset-relevance-layout{display:grid;grid-template-columns:.9fr 1.1fr;gap:13px}
+.cforeset-relevance-source,.cforeset-relevance-zone{min-width:0;min-height:220px;padding:14px;border:1px solid var(--cforeset-border);border-radius:15px}
+.cforeset-relevance-source{background:#fff}
+.cforeset-relevance-targets{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cforeset-relevance-zone{min-height:220px;border-style:dashed}
+.cforeset-relevance-needed{background:var(--cforeset-blue-light)}
+.cforeset-relevance-notnow{background:var(--cforeset-sand-light)}
+.cforeset-zone-title{margin-bottom:9px;font-size:14px;font-weight:900}
+.cforeset-zone-content{display:flex;flex-direction:column;gap:8px}
+.cforeset-post-sort{display:none;margin-top:15px;padding:15px 17px;border:1px solid #C9D4C5;border-radius:13px;background:var(--cforeset-sage-light);color:#52604D;font-weight:800}
+.cforeset-post-sort.cforeset-show{display:block}
+.cforeset-focus-card{padding:22px;border:1px solid var(--cforeset-border);border-radius:18px;background:#fff}
+.cforeset-focus-instruction{max-width:720px;margin:0 auto 19px;text-align:center;color:var(--cforeset-muted)}
+.cforeset-focus-instruction strong{color:var(--cforeset-graphite)}
+.cforeset-focus-field{display:grid;grid-template-columns:repeat(5,minmax(76px,1fr));grid-auto-rows:92px;gap:14px 18px;max-width:790px;margin:0 auto;padding:24px;border:1px solid #E5E1D8;border-radius:18px;background:var(--cforeset-milk)}
+.cforeset-focus-shape{justify-self:center;align-self:center;display:flex;align-items:center;justify-content:center;padding:0;border:2px solid transparent;color:var(--cforeset-graphite);font-size:21px;font-weight:900;cursor:pointer;box-shadow:0 3px 9px rgba(42,47,51,.05);transition:background .15s ease,border-color .15s ease,box-shadow .15s ease,opacity .15s ease}
+.cforeset-focus-shape:hover{box-shadow:0 5px 13px rgba(42,47,51,.09)}
+.cforeset-shape-circle{width:72px;height:72px;border-radius:50%}
+.cforeset-shape-square{width:66px;height:66px;border-radius:10px}
+.cforeset-shape-diamond{width:70px;height:70px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+.cforeset-shape-rect{width:94px;height:58px;border-radius:18px}
+.cforeset-tone-blue{background:var(--cforeset-blue-light);border-color:#B9C6D5}
+.cforeset-tone-sage{background:var(--cforeset-sage-light);border-color:#C0CCBC}
+.cforeset-tone-sand{background:var(--cforeset-sand-light);border-color:#D8C8A9}
+.cforeset-tone-terra{background:var(--cforeset-terracotta-light);border-color:#DDB4A8}
+.cforeset-focus-shape.cforeset-number-done{background:var(--cforeset-sage);border-color:#879882;box-shadow:0 0 0 4px rgba(169,183,163,.18)}
+.cforeset-focus-shape.cforeset-number-miss{animation:cforesetNudge .22s ease}
+.cforeset-focus-shape:nth-child(2),.cforeset-focus-shape:nth-child(9){margin-top:12px}
+.cforeset-focus-shape:nth-child(4),.cforeset-focus-shape:nth-child(12){margin-top:-8px}
+.cforeset-focus-shape:nth-child(6),.cforeset-focus-shape:nth-child(13){margin-left:10px}
+@keyframes cforesetNudge{0%,100%{transform:translateX(0)}35%{transform:translateX(-4px)}70%{transform:translateX(4px)}}
+.cforeset-focus-result{display:none;margin-top:18px;text-align:center;color:#5D6D57;font-weight:900}
+.cforeset-focus-result.cforeset-show{display:block}
+.cforeset-decision-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cforeset-decision-card{padding:17px;border:1px solid var(--cforeset-border);border-radius:15px;background:#fff}
+.cforeset-decision-card:nth-child(1){background:var(--cforeset-sage-light)}.cforeset-decision-card:nth-child(2){background:var(--cforeset-sand-light)}.cforeset-decision-card:nth-child(3){background:var(--cforeset-terracotta-light)}.cforeset-decision-card:nth-child(4){background:var(--cforeset-blue-light)}
+.cforeset-decision-card h4{margin:0 0 4px;font-size:16px}.cforeset-decision-card p{margin:0 0 10px;color:var(--cforeset-muted);font-size:12px}
+.cforeset-small-textarea{width:100%;min-height:100px;padding:11px 12px;resize:vertical;border:1px solid rgba(42,47,51,.16);border-radius:11px;background:rgba(255,255,255,.82);color:var(--cforeset-graphite)}
+.cforeset-small-textarea:focus{outline:none;border-color:var(--cforeset-blue)}
+.cforeset-check-row{display:flex;align-items:flex-start;gap:9px;margin-top:9px;color:var(--cforeset-graphite);font-size:13px;font-weight:700}
+.cforeset-check-row input{width:18px;height:18px;margin-top:1px;accent-color:var(--cforeset-blue)}
+.cforeset-small-textarea:disabled{opacity:.5;cursor:not-allowed}
+.cforeset-final{max-width:830px;margin:0 auto}
+.cforeset-final-clean{padding:25px;border:1px solid #D7DCD3;border-radius:18px;background:#fff}
+.cforeset-final-item{padding:16px 0;border-bottom:1px solid var(--cforeset-soft)}
+.cforeset-final-item:first-child{padding-top:0}.cforeset-final-item:last-of-type{border-bottom:0}
+.cforeset-final-label{margin-bottom:5px;color:var(--cforeset-muted);font-size:12px;font-weight:900;text-transform:uppercase}
+.cforeset-final-value{color:var(--cforeset-graphite);font-size:17px;font-weight:800}
+.cforeset-final-next{margin-top:8px;padding:20px;border:1px solid #B9C7D5;border-radius:15px;background:var(--cforeset-blue-light)}
+.cforeset-final-next .cforeset-final-value{font-size:21px;line-height:1.35}
+.cforeset-final-note{margin-top:17px;padding:15px 17px;border:1px solid #CAD4C6;border-radius:14px;background:var(--cforeset-sage-light);color:#576551}
+.cforeset-finished-message{display:none;margin-top:14px;color:#5C6C57;font-weight:900}.cforeset-finished-message.cforeset-show{display:block}
+.cforeset-widget button:focus-visible,.cforeset-widget input:focus-visible,.cforeset-widget textarea:focus-visible,.cforeset-widget [tabindex="0"]:focus-visible{outline:3px solid rgba(111,134,163,.28);outline-offset:2px}
+@media(max-width:1000px){.cforeset-buckets{grid-template-columns:repeat(2,minmax(0,1fr))}.cforeset-bucket:last-child{grid-column:1/-1}.cforeset-decision-suggestions{grid-template-columns:1fr 1fr}}
+@media(max-width:800px){.cforeset-relevance-layout{grid-template-columns:1fr}.cforeset-decision-grid{grid-template-columns:1fr}.cforeset-preset-groups{grid-template-columns:1fr}}
+@media(max-width:650px){.cforeset-widget{margin:0}.cforeset-shell{border-left:0;border-right:0;border-radius:0}.cforeset-top{padding:20px 15px 16px}.cforeset-course-title{font-size:21px}.cforeset-progress-row{align-items:flex-start;flex-direction:column;gap:8px}.cforeset-progress{width:100%}.cforeset-content{padding:24px 14px 28px}.cforeset-screen-head h3{font-size:23px}.cforeset-task-list,.cforeset-source-cards,.cforeset-now-options,.cforeset-buckets,.cforeset-relevance-targets,.cforeset-decision-suggestions{grid-template-columns:1fr}.cforeset-bucket:last-child{grid-column:auto}.cforeset-bucket{min-height:110px}.cforeset-relevance-source,.cforeset-relevance-zone{min-height:120px}.cforeset-actions,.cforeset-actions-between{flex-direction:column}.cforeset-btn{width:100%}.cforeset-task-input-row{grid-template-columns:minmax(0,1fr) 48px}.cforeset-focus-field{grid-template-columns:repeat(3,minmax(72px,1fr));grid-auto-rows:82px;gap:10px;padding:16px 8px}.cforeset-focus-shape:nth-child(n){margin:0}.cforeset-shape-circle{width:62px;height:62px}.cforeset-shape-square{width:58px;height:58px}.cforeset-shape-diamond{width:60px;height:60px}.cforeset-shape-rect{width:82px;height:52px}}
+</style>
+</head>
+<body>
+<section class="cforeset-widget" data-cforeset-root>
+  <div class="cforeset-shell">
+    <header class="cforeset-top">
+      <div class="cforeset-course-label">Интерактивная практика</div>
+      <h2 class="cforeset-course-title">Перезагрузка за 7 минут: очистите голову перед следующим решением</h2>
+      <div class="cforeset-progress-row">
+        <div class="cforeset-progress" data-cforeset-progress>
+          <span class="cforeset-progress-item"></span><span class="cforeset-progress-item"></span><span class="cforeset-progress-item"></span><span class="cforeset-progress-item"></span><span class="cforeset-progress-item"></span><span class="cforeset-progress-item"></span><span class="cforeset-progress-item"></span>
+        </div>
+        <div class="cforeset-progress-text" data-cforeset-progress-text>1 из 7</div>
+      </div>
+      <div class="cforeset-restart-top" data-cforeset-restart-wrap>
+        <button type="button" class="cforeset-restart-link" data-cforeset-restart>Начать заново</button>
+      </div>
+    </header>
+
+    <main class="cforeset-content">
+      <section class="cforeset-screen cforeset-active" data-cforeset-screen="0">
+        <div class="cforeset-screen-head">
+          <div class="cforeset-screen-meta">Шаг 1 из 7 <span class="cforeset-time">≈ 1 минута</span></div>
+          <h3>Соберите все, что сейчас держите в голове</h3>
+          <p>Не пытайтесь пока ничего решать. Выберите типичные рабочие задачи или добавьте свои — дела, вопросы и обещания, к которым мысленно возвращаетесь прямо сейчас.</p>
+        </div>
+        <div class="cforeset-intro-note">За несколько минут мы постепенно уберем из поля внимания все, что не относится к вашему следующему решению.</div>
+        <div class="cforeset-card">
+          <label class="cforeset-field-label" for="cforeset-task-input">Добавить свою задачу</label>
+          <div class="cforeset-task-input-row">
+            <input id="cforeset-task-input" type="text" class="cforeset-task-input" data-cforeset-task-input placeholder="Например: проверить бюджет проекта" maxlength="160">
+            <button type="button" class="cforeset-add-btn" data-cforeset-add-task aria-label="Добавить задачу">+</button>
+          </div>
+
+          <div class="cforeset-presets">
+            <div class="cforeset-presets-title">Можно выбрать из типичных задач</div>
+            <div class="cforeset-presets-note">Нажмите на карточку, чтобы добавить ее в свой список. Повторный клик уберет задачу.</div>
+            <div class="cforeset-preset-groups" data-cforeset-presets></div>
+          </div>
+
+          <div class="cforeset-task-list" data-cforeset-task-list></div>
+          <div class="cforeset-count-note" data-cforeset-count-note>Добавьте хотя бы три дела или вопроса.</div>
+        </div>
+        <div class="cforeset-actions">
+          <button type="button" class="cforeset-btn cforeset-btn-main" data-cforeset-step1-next disabled>Разобраться с этим →</button>
+        </div>
+      </section>
+
+      <section class="cforeset-screen" data-cforeset-screen="1">
+        <div class="cforeset-screen-head">
+          <div class="cforeset-screen-meta">Шаг 2 из 7 <span class="cforeset-time">≈ 1,5 минуты</span></div>
+          <h3>Решите, что с этим делать</h3>
+          <p>Сейчас не нужно выполнять эти задачи. Достаточно определить судьбу каждой.</p>
+        </div>
+        <div class="cforeset-source-tray">
+          <div class="cforeset-source-title">Пока не распределено</div>
+          <div class="cforeset-source-cards" data-cforeset-step2-source></div>
+        </div>
+        <div class="cforeset-buckets">
+          <div class="cforeset-bucket cforeset-bucket-now" tabindex="0" data-cforeset-step2-zone="now">
+            <div class="cforeset-bucket-head"><span class="cforeset-bucket-title">Сделать сейчас</span><span class="cforeset-bucket-subtitle">Требует вашего внимания в ближайшее время</span></div>
+            <div class="cforeset-bucket-content"></div>
+          </div>
+          <div class="cforeset-bucket cforeset-bucket-later" tabindex="0" data-cforeset-step2-zone="later">
+            <div class="cforeset-bucket-head"><span class="cforeset-bucket-title">Запланировать</span><span class="cforeset-bucket-subtitle">Задача нужна, но заниматься ею сейчас не требуется</span></div>
+            <div class="cforeset-bucket-content"></div>
+          </div>
+          <div class="cforeset-bucket cforeset-bucket-wait" tabindex="0" data-cforeset-step2-zone="wait">
+            <div class="cforeset-bucket-head"><span class="cforeset-bucket-title">Жду данные</span><span class="cforeset-bucket-subtitle">Дальше нельзя двигаться, пока не придет ответ или информация</span></div>
+            <div class="cforeset-bucket-content"></div>
+          </div>
+          <div class="cforeset-bucket cforeset-bucket-delegate" tabindex="0" data-cforeset-step2-zone="delegate">
+            <div class="cforeset-bucket-head"><span class="cforeset-bucket-title">Передать</span><span class="cforeset-bucket-subtitle">Задача нужна, но выполнять ее должны не вы</span></div>
+            <div class="cforeset-bucket-content"></div>
+          </div>
+          <div class="cforeset-bucket cforeset-bucket-drop" tabindex="0" data-cforeset-step2-zone="drop">
+            <div class="cforeset-bucket-head"><span class="cforeset-bucket-title">Не делать</span><span class="cforeset-bucket-subtitle">Задача больше не требует действия</span></div>
+            <div class="cforeset-bucket-content"></div>
+          </div>
+        </div>
+        <div class="cforeset-step-note">Можно перетаскивать карточки. На телефоне: нажмите карточку, затем нужную область.</div>
+        <div class="cforeset-actions cforeset-actions-between">
+          <button type="button" class="cforeset-btn cforeset-btn-back" data-cforeset-prev="1">← Назад</button>
+          <button type="button" class="cforeset-btn cforeset-btn-main" data-cforeset-step2-next disabled>Оставить главное →</button>
+        </div>
+      </section>
+
+      <section class="cforeset-screen" data-cforeset-screen="2">
+        <div class="cforeset-screen-head">
+          <div class="cforeset-screen-meta">Шаг 3 из 7 <span class="cforeset-time">≈ 1 минута</span></div>
+          <h3>Оставьте один главный вопрос</h3>
+          <p>Если пытаться решить все одновременно, ни одна задача не получает полного внимания. Выберите вопрос, которым займетесь сейчас.</p>
+        </div>
+        <div class="cforeset-now-options" data-cforeset-now-options></div>
+        <div class="cforeset-main-task" data-cforeset-main-task>
+          <div class="cforeset-main-task-label">Вы выбрали</div>
+          <div class="cforeset-main-task-text" data-cforeset-main-task-text></div>
+        </div>
+
+        <div class="cforeset-decision-suggestions-wrap" data-cforeset-decision-suggestions-wrap>
+          <div class="cforeset-decision-suggestions-title">Выберите подходящую формулировку или используйте ее как основу</div>
+          <div class="cforeset-decision-suggestions" data-cforeset-decision-suggestions></div>
+        </div>
+
+        <div class="cforeset-card">
+          <label class="cforeset-field-label" for="cforeset-decision-input">Что именно вам нужно решить?</label>
+          <textarea id="cforeset-decision-input" class="cforeset-textarea" data-cforeset-decision-input maxlength="300" placeholder="Например: согласовать проект сейчас или вернуть его на доработку"></textarea>
+          <div class="cforeset-hint">Хорошая формулировка предполагает решение или выбор, а не просто действие «посмотреть» или «проверить».</div>
+        </div>
+        <div class="cforeset-later-box" data-cforeset-later-box></div>
+        <div class="cforeset-actions cforeset-actions-between">
+          <button type="button" class="cforeset-btn cforeset-btn-back" data-cforeset-prev="2">← Назад</button>
+          <button type="button" class="cforeset-btn cforeset-btn-main" data-cforeset-step3-next disabled>Оставить этот вопрос →</button>
+        </div>
+      </section>
+
+      <section class="cforeset-screen" data-cforeset-screen="3">
+        <div class="cforeset-screen-head">
+          <div class="cforeset-screen-meta">Шаг 4 из 7 <span class="cforeset-time">≈ 1 минута</span></div>
+          <h3>Оставьте только то, что относится к этому решению</h3>
+          <p>Посмотрите на оставшиеся дела еще раз. Какие из них действительно нужны, чтобы принять это решение?</p>
+        </div>
+        <div class="cforeset-question-box">
+          <div class="cforeset-question-label">Ваш вопрос</div>
+          <div class="cforeset-question-text" data-cforeset-question-step4></div>
+        </div>
+        <div class="cforeset-relevance-layout">
+          <div class="cforeset-relevance-source" tabindex="0" data-cforeset-step4-zone="source">
+            <div class="cforeset-zone-title">Пока не разобрали</div><div class="cforeset-zone-content"></div>
+          </div>
+          <div class="cforeset-relevance-targets">
+            <div class="cforeset-relevance-zone cforeset-relevance-needed" tabindex="0" data-cforeset-step4-zone="needed">
+              <div class="cforeset-zone-title">Нужно для решения</div><div class="cforeset-zone-content"></div>
+            </div>
+            <div class="cforeset-relevance-zone cforeset-relevance-notnow" tabindex="0" data-cforeset-step4-zone="notnow">
+              <div class="cforeset-zone-title">Не сейчас</div><div class="cforeset-zone-content"></div>
+            </div>
+          </div>
+        </div>
+        <div class="cforeset-actions" style="justify-content:flex-start; margin-top:14px;">
+          <button type="button" class="cforeset-btn cforeset-btn-soft" data-cforeset-step4-move-rest>Перенести оставшиеся дела на потом</button>
+        </div>
+        <div class="cforeset-post-sort" data-cforeset-post-sort>Теперь перед вами только вопрос и то, что действительно с ним связано.</div>
+        <div class="cforeset-step-note">Можно перетаскивать карточки или выбрать карточку и затем нажать нужную область.</div>
+        <div class="cforeset-actions cforeset-actions-between">
+          <button type="button" class="cforeset-btn cforeset-btn-back" data-cforeset-prev="3">← Назад</button>
+          <button type="button" class="cforeset-btn cforeset-btn-main" data-cforeset-step4-next disabled>Сделать короткую паузу →</button>
+        </div>
+      </section>
+
+      <section class="cforeset-screen" data-cforeset-screen="4">
+        <div class="cforeset-screen-head">
+          <div class="cforeset-screen-meta">Шаг 5 из 7 <span class="cforeset-time">≈ 1 минута</span></div>
+          <h3>На минуту перестаньте что-либо решать</h3>
+          <p>Перед следующим шагом переключите внимание с рабочих сообщений и цифр на одно простое действие.</p>
+        </div>
+        <div class="cforeset-focus-card">
+          <div class="cforeset-focus-instruction"><strong>Отметьте шарики по порядку — от 1 до 8.</strong><br>Остальные фигуры не трогайте. Не торопитесь — здесь нет таймера.</div>
+          <div class="cforeset-focus-field" aria-label="Поле с фигурами и числами">
+            <button type="button" class="cforeset-focus-shape cforeset-shape-circle cforeset-tone-sand" data-cforeset-focus-shape data-cforeset-target="true" data-cforeset-number="1" aria-label="Шарик 1">1</button>
+            <button type="button" class="cforeset-focus-shape cforeset-shape-diamond cforeset-tone-blue" data-cforeset-focus-shape data-cforeset-target="false" data-cforeset-number="5" aria-label="Ромб 5">5</button>
+            <button type="button" class="cforeset-focus-shape cforeset-shape-circle cforeset-tone-sage" data-cforeset-focus-shape data-cforeset-target="true" data-cforeset-number="4" aria-label="Шарик 4">4</button>
+            <button type="button" class="cforeset-focus-shape cforeset-shape-square cforeset-tone-terra" data-cforeset-focus-shape data-cforeset-target="false" data-cforeset-number="2" aria-label="Квадрат 2">2</button>
+            <button type="button" class="cforeset-focus-shape cforeset-shape-circle cforeset-tone-blue" data-cforeset-focus-shape data-cforeset-target="true" data-cforeset-number="7" aria-label="Шарик 7">7</button>
+
+            <button type="button" class="cforeset-focus-shape cforeset-shape-rect cforeset-tone-sage" data-cforeset-focus-shape data-cforeset-target="false" data-cforeset-number="3" aria-label="Прямоугольник 3">3</button>
+            <button type="button" class="cforeset-focus-shape cforeset-shape-circle cforeset-tone-terra" data-cforeset-focus-shape data-cforeset-target="true" data-cforeset-number="2" aria-label="Шарик 2">2</button>
+            <button type="button" class="cforeset-focus-shape cforeset-shape-diamond cforeset-tone-sand" data-cforeset-focus-shape data-cforeset-target="false" data-cforeset-number="8" aria-label="Ромб 8">8</button>
+            <button type="button" class="cforeset-focus-shape cforeset-shape-circle cforeset-tone-sand" data-cforeset-focus-shape data-cforeset-target="true" data-cforeset-number="6" aria-label="Шарик 6">6</button>
+            <button type="button" class="cforeset-focus-shape cforeset-shape-square cforeset-tone-blue" data-cforeset-focus-shape data-cforeset-target="false" data-cforeset-number="4" aria-label="Квадрат 4">4</button>
+
+            <button type="button" class="cforeset-focus-shape cforeset-shape-circle cforeset-tone-blue" data-cforeset-focus-shape data-cforeset-target="true" data-cforeset-number="3" aria-label="Шарик 3">3</button>
+            <button type="button" class="cforeset-focus-shape cforeset-shape-rect cforeset-tone-terra" data-cforeset-focus-shape data-cforeset-target="false" data-cforeset-number="7" aria-label="Прямоугольник 7">7</button>
+            <button type="button" class="cforeset-focus-shape cforeset-shape-circle cforeset-tone-sage" data-cforeset-focus-shape data-cforeset-target="true" data-cforeset-number="8" aria-label="Шарик 8">8</button>
+            <button type="button" class="cforeset-focus-shape cforeset-shape-circle cforeset-tone-terra" data-cforeset-focus-shape data-cforeset-target="true" data-cforeset-number="5" aria-label="Шарик 5">5</button>
+          </div>
+          <div class="cforeset-focus-result" data-cforeset-focus-result>Готово. Теперь вернемся к вашему вопросу.</div>
+        </div>
+        <div class="cforeset-actions cforeset-actions-between">
+          <button type="button" class="cforeset-btn cforeset-btn-back" data-cforeset-prev="4">← Назад</button>
+          <button type="button" class="cforeset-btn cforeset-btn-main" data-cforeset-step5-next disabled>Вернуться к решению →</button>
+        </div>
+      </section>
+
+      <section class="cforeset-screen" data-cforeset-screen="5">
+        <div class="cforeset-screen-head">
+          <div class="cforeset-screen-meta">Шаг 6 из 7 <span class="cforeset-time">≈ 1 минута</span></div>
+          <h3>Посмотрите на решение еще раз</h3>
+          <p>Разделите то, что уже известно, ваши предположения и данные, которых пока не хватает.</p>
+        </div>
+        <div class="cforeset-question-box"><div class="cforeset-question-label">Нужно решить</div><div class="cforeset-question-text" data-cforeset-question-step6></div></div>
+        <div class="cforeset-decision-grid">
+          <div class="cforeset-decision-card"><h4>Что я знаю</h4><p>Факты и данные, которые уже есть</p><textarea class="cforeset-small-textarea" data-cforeset-known maxlength="500" placeholder="Например: банк предложил ставку 18,2%"></textarea></div>
+          <div class="cforeset-decision-card"><h4>Что я предполагаю</h4><p>То, что пока остается ожиданием или гипотезой</p><textarea class="cforeset-small-textarea" data-cforeset-assume maxlength="500" placeholder="Например: ставки могут снизиться во втором полугодии"></textarea></div>
+          <div class="cforeset-decision-card"><h4>Чего мне не хватает</h4><p>Какие данные нужны перед решением</p><textarea class="cforeset-small-textarea" data-cforeset-missing maxlength="500" placeholder="Например: предложение второго банка"></textarea><label class="cforeset-check-row"><input type="checkbox" data-cforeset-enough><span>У меня достаточно данных для решения</span></label></div>
+          <div class="cforeset-decision-card"><h4>Что я сделаю дальше</h4><p>Одно действие, которое приблизит решение</p><textarea class="cforeset-small-textarea" data-cforeset-next-action maxlength="500" placeholder="Например: сегодня запросить альтернативное предложение"></textarea></div>
+        </div>
+        <div class="cforeset-actions cforeset-actions-between">
+          <button type="button" class="cforeset-btn cforeset-btn-back" data-cforeset-prev="5">← Назад</button>
+          <button type="button" class="cforeset-btn cforeset-btn-main" data-cforeset-step6-next disabled>Собрать итог →</button>
+        </div>
+      </section>
+
+      <section class="cforeset-screen" data-cforeset-screen="6">
+        <div class="cforeset-final">
+          <div class="cforeset-screen-head"><div class="cforeset-screen-meta">Шаг 7 из 7</div><h3>Готово. Теперь — только следующий шаг</h3></div>
+          <div class="cforeset-final-clean">
+            <div class="cforeset-final-item"><div class="cforeset-final-label">Решение</div><div class="cforeset-final-value" data-cforeset-final-question></div></div>
+            <div class="cforeset-final-item"><div class="cforeset-final-label">Перед решением нужно</div><div class="cforeset-final-value" data-cforeset-final-missing></div></div>
+            <div class="cforeset-final-next"><div class="cforeset-final-label">Следующий шаг</div><div class="cforeset-final-value" data-cforeset-final-action></div></div>
+            <div class="cforeset-final-note">Остальные задачи никуда не исчезли. Но сейчас вам не нужно держать их все перед глазами.</div>
+            <div class="cforeset-finished-message" data-cforeset-finished-message>Готово. Можно закрыть интерактив и перейти к следующему шагу.</div>
+          </div>
+          <div class="cforeset-actions cforeset-actions-between">
+            <button type="button" class="cforeset-btn cforeset-btn-back" data-cforeset-prev="6">← Назад</button>
+            <div class="cforeset-actions" style="margin-top:0"><button type="button" class="cforeset-btn cforeset-btn-soft" data-cforeset-final-restart>Пройти еще раз</button><button type="button" class="cforeset-btn cforeset-btn-main" data-cforeset-finish>Вернуться к работе</button></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</section>
+
+<script>
+(() => {
+  document.querySelectorAll('[data-cforeset-root]').forEach(root => {
+    const initialMarkup = root.innerHTML;
+
+    function init(){
+      const presetGroups = [
+        {title:'Финансирование',items:[
+          {key:'bank_terms',text:'Ответить банку по условиям кредитной линии',decisions:['Принимать предложенные банком условия или продолжить переговоры?','Какие условия кредита для нас критичны и на чем можно уступить?','Соглашаться на предложение этого банка или запросить альтернативные условия?']},
+          {key:'choose_bank',text:'Выбрать банк для нового финансирования',decisions:['Какой вариант финансирования выгоднее компании с учетом не только ставки, но и остальных условий?','Выбрать банк сейчас или запросить дополнительные предложения?','Какой банк лучше подходит под параметры планируемого кредита?']},
+          {key:'extra_credit',text:'Решить вопрос с дополнительным кредитом',decisions:['Нужен ли компании дополнительный кредит сейчас?','Какой объем дополнительного финансирования действительно необходим?','Привлекать кредит или закрыть потребность в деньгах другим способом?']},
+          {key:'debt_schedule',text:'Пересмотреть график погашения долга',decisions:['Оставить текущий график или договариваться о его изменении?','Какие платежи нужно перенести, чтобы снизить нагрузку на денежный поток?','Есть ли смысл рефинансировать часть текущего долга?']}
+        ]},
+        {title:'Бюджет и инвестиции',items:[
+          {key:'investment_budget',text:'Проверить бюджет инвестиционного проекта',decisions:['Утвердить бюджет проекта или вернуть его на доработку?','Какой объем инвестиций компания может согласовать сейчас?','Достаточно ли обоснованы затраты проекта для принятия решения?']},
+          {key:'capex',text:'Согласовать CAPEX',decisions:['Согласовать расходы сейчас или перенести часть инвестиций?','Какие CAPEX оставить в плане, а какие можно отложить?','Можно ли утвердить заявку без пересмотра текущего бюджета?']},
+          {key:'unit_budget',text:'Пересмотреть бюджет подразделения',decisions:['Какой объем расходов подразделению действительно нужен?','Какие статьи бюджета можно сократить или перенести?','Оставить бюджет без изменений или запросить его пересмотр?']},
+          {key:'unplanned_costs',text:'Разобраться с внеплановыми расходами',decisions:['Согласовать внеплановые расходы или отказаться от них?','Можно ли покрыть эти расходы в рамках текущего бюджета?','Что произойдет, если перенести расход на следующий период?']}
+        ]},
+        {title:'Результаты бизнеса',items:[
+          {key:'sales_forecast',text:'Посмотреть обновленный прогноз продаж',decisions:['Нужно ли менять финансовый план из-за нового прогноза продаж?','Как новый прогноз повлияет на денежный поток и потребность в финансировании?','Какие решения по затратам нужно пересмотреть вслед за прогнозом продаж?']},
+          {key:'margin_drop',text:'Разобраться, почему снизилась маржа',decisions:['Что сильнее всего повлияло на снижение маржи?','Это временное отклонение или нужно менять план?','На какой фактор нужно воздействовать в первую очередь, чтобы восстановить маржу?']},
+          {key:'cost_plan',text:'Пересмотреть план по затратам',decisions:['Какие расходы действительно можно сократить без ущерба для бизнеса?','Нужно ли снижать общий план затрат или перераспределить расходы?','Какие статьи стоит пересмотреть в первую очередь?']},
+          {key:'budget_variance',text:'Проверить отклонение от бюджета',decisions:['Требует ли отклонение корректировки бюджета?','Это разовое отклонение или изменение, которое сохранится до конца периода?','Какое управленческое решение нужно принять из-за этого отклонения?']}
+        ]},
+        {title:'Деньги и контрагенты',items:[
+          {key:'overdue_ar',text:'Разобраться с просроченной дебиторкой',decisions:['По каким должникам нужно действовать в первую очередь?','Продолжать работу с клиентом на текущих условиях или ужесточить их?','Какой долг еще имеет смысл взыскивать в обычном порядке, а где нужна эскалация?']},
+          {key:'client_deferral',text:'Согласовать отсрочку крупному клиенту',decisions:['Давать клиенту запрошенную отсрочку или оставить текущие условия?','Какой срок отсрочки компания может предоставить без лишнего риска?','Нужны ли дополнительные гарантии или лимит при увеличении отсрочки?']},
+          {key:'supplier_terms',text:'Пересмотреть условия оплаты поставщику',decisions:['Соглашаться на новые условия поставщика или вести переговоры?','Как изменение условий повлияет на наш денежный поток?','Какой вариант оплаты будет экономически выгоднее компании?']},
+          {key:'supplier_advance',text:'Решить вопрос с крупным авансом поставщику',decisions:['Соглашаться на аванс в запрошенном размере?','Какой размер аванса приемлем с учетом риска и стоимости денег?','Можно ли заменить аванс другими условиями расчетов?']}
+        ]},
+        {title:'Текущие дела',items:[
+          {key:'auditors',text:'Ответить аудиторам',decisions:['Какой ответ можно дать сейчас, а для чего сначала нужны дополнительные данные?','Кто должен подготовить информацию для ответа?','Требует ли запрос аудиторов моего решения или его можно передать другому сотруднику?']},
+          {key:'ceo_meeting',text:'Подготовиться к встрече с генеральным директором',decisions:['Какое решение я хочу получить по итогам встречи?','Какие два-три вопроса действительно нужно обсудить?','Какие данные нужны, чтобы разговор закончился решением?']},
+          {key:'report_check',text:'Проверить отчет перед отправкой',decisions:['Достаточно ли отчет готов для отправки или его нужно доработать?','Какие показатели требуют дополнительной проверки?','Какой вывод должен получить адресат из этого отчета?']},
+          {key:'cross_unit_request',text:'Согласовать запрос другого подразделения',decisions:['Нужно ли согласовывать запрос в предложенном виде?','Как запрос повлияет на бюджет или денежный поток?','Какие условия нужно изменить перед согласованием?']}
+        ]}
+      ];
+      const presetMap = new Map();
+      presetGroups.forEach(group => group.items.forEach(item => presetMap.set(item.key,item)));
+
+      const state = {step:0,tasks:[],selectedTaskId:null,decisionDrafts:{},relevance:{},known:'',assume:'',missing:'',enough:false,nextAction:'',focusExpected:1};
+      let taskIdCounter = 1;
+      let draggedId = null;
+      let selectedDragId = null;
+
+      const screens = [...root.querySelectorAll('[data-cforeset-screen]')];
+      const progressItems = [...root.querySelectorAll('.cforeset-progress-item')];
+      const progressText = root.querySelector('[data-cforeset-progress-text]');
+      const restartWrap = root.querySelector('[data-cforeset-restart-wrap]');
+
+      function getDecisionQuestion(){
+        if(!state.selectedTaskId) return '';
+        return String(state.decisionDrafts[state.selectedTaskId] || '').trim();
+      }
+
+      function showStep(index){
+        if(index < 0 || index > 6) return;
+        state.step = index;
+        screens.forEach((screen,i) => screen.classList.toggle('cforeset-active',i === index));
+        progressItems.forEach((item,i) => {
+          item.classList.toggle('cforeset-complete',i < index);
+          item.classList.toggle('cforeset-current',i === index);
+        });
+        if(progressText) progressText.textContent = `${index + 1} из 7`;
+        if(restartWrap) restartWrap.classList.toggle('cforeset-show',index > 0);
+        if(index === 0) renderStep1();
+        if(index === 1) renderStep2();
+        if(index === 2) renderStep3();
+        if(index === 3) renderStep4();
+        if(index === 5) renderStep6();
+        if(index === 6) renderFinal();
+        const rect = root.getBoundingClientRect();
+        if(rect.top < 0) window.scrollTo({top:window.scrollY + rect.top - 12,behavior:'smooth'});
+      }
+
+      function resetAll(){ root.innerHTML = initialMarkup; init(); }
+      root.querySelectorAll('[data-cforeset-restart]').forEach(button => button.addEventListener('click',resetAll));
+      const finalRestart = root.querySelector('[data-cforeset-final-restart]');
+      if(finalRestart) finalRestart.addEventListener('click',resetAll);
+      root.querySelectorAll('[data-cforeset-prev]').forEach(button => button.addEventListener('click',() => showStep(Number(button.dataset.cforesetPrev) - 1)));
+
+      function findTask(id){ return state.tasks.find(task => task.id === Number(id)); }
+      function removeTask(id){
+        state.tasks = state.tasks.filter(task => task.id !== id);
+        if(state.selectedTaskId === id) state.selectedTaskId = null;
+        delete state.relevance[id];
+        delete state.decisionDrafts[id];
+      }
+      function addTask(text,presetKey=null){
+        const clean = String(text || '').trim().replace(/\s+/g,' ');
+        if(!clean) return;
+        const duplicate = state.tasks.some(task => task.text.toLowerCase() === clean.toLowerCase());
+        if(duplicate) return;
+        state.tasks.push({id:taskIdCounter++,text:clean,category:null,presetKey});
+      }
+
+      function clearDragSelection(){
+        selectedDragId = null;
+        root.querySelectorAll('.cforeset-drag-card').forEach(card => card.classList.remove('cforeset-selected'));
+      }
+
+      function createTaskElement(task,options={}){
+        const card = document.createElement('div');
+        card.className = 'cforeset-drag-card';
+        if(options.muted) card.classList.add('cforeset-muted-card');
+        card.draggable = true;
+        card.tabIndex = 0;
+        card.dataset.cforesetTaskId = String(task.id);
+        card.textContent = task.text;
+        card.addEventListener('click',event => {
+          event.stopPropagation();
+          if(selectedDragId === task.id){ clearDragSelection(); return; }
+          clearDragSelection();
+          selectedDragId = task.id;
+          card.classList.add('cforeset-selected');
+        });
+        card.addEventListener('keydown',event => {
+          if(event.key === 'Enter' || event.key === ' '){ event.preventDefault(); card.click(); }
+        });
+        card.addEventListener('dragstart',event => {
+          draggedId = task.id;
+          if(event.dataTransfer){
+            event.dataTransfer.effectAllowed = 'move';
+            try{ event.dataTransfer.setData('text/plain',String(task.id)); }catch(error){}
+          }
+        });
+        card.addEventListener('dragend',() => {
+          draggedId = null;
+          root.querySelectorAll('.cforeset-drop-hover').forEach(zone => zone.classList.remove('cforeset-drop-hover'));
+        });
+        return card;
+      }
+
+      const taskInput = root.querySelector('[data-cforeset-task-input]');
+      const addTaskButton = root.querySelector('[data-cforeset-add-task]');
+      const taskList = root.querySelector('[data-cforeset-task-list]');
+      const countNote = root.querySelector('[data-cforeset-count-note]');
+      const presetsContainer = root.querySelector('[data-cforeset-presets]');
+      const step1Next = root.querySelector('[data-cforeset-step1-next]');
+
+      function renderPresets(){
+        if(!presetsContainer) return;
+        presetsContainer.innerHTML = '';
+        presetGroups.forEach(group => {
+          const groupEl = document.createElement('div');
+          groupEl.className = 'cforeset-preset-group';
+          const title = document.createElement('div');
+          title.className = 'cforeset-preset-group-title';
+          title.textContent = group.title;
+          const list = document.createElement('div');
+          list.className = 'cforeset-preset-list';
+          group.items.forEach(item => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'cforeset-preset-btn';
+            const selected = state.tasks.some(task => task.presetKey === item.key);
+            if(selected) button.classList.add('cforeset-selected');
+            button.setAttribute('aria-pressed',selected ? 'true' : 'false');
+            button.textContent = item.text;
+            button.addEventListener('click',() => {
+              const existing = state.tasks.find(task => task.presetKey === item.key);
+              if(existing) removeTask(existing.id); else addTask(item.text,item.key);
+              renderStep1();
+            });
+            list.appendChild(button);
+          });
+          groupEl.appendChild(title);
+          groupEl.appendChild(list);
+          presetsContainer.appendChild(groupEl);
+        });
+      }
+
+      function renderStep1(){
+        if(!taskList) return;
+        renderPresets();
+        taskList.innerHTML = '';
+        state.tasks.forEach(task => {
+          const card = document.createElement('div');
+          card.className = 'cforeset-task-card';
+          const text = document.createElement('span');
+          text.textContent = task.text;
+          const remove = document.createElement('button');
+          remove.type = 'button';
+          remove.className = 'cforeset-task-remove';
+          remove.setAttribute('aria-label','Удалить');
+          remove.textContent = '×';
+          remove.addEventListener('click',() => { removeTask(task.id); renderStep1(); });
+          card.appendChild(text);
+          card.appendChild(remove);
+          taskList.appendChild(card);
+        });
+        const count = state.tasks.length;
+        if(countNote){
+          if(count < 3) countNote.textContent = `Добавьте еще ${3 - count}.`;
+          else countNote.textContent = `В списке: ${count}. Можно продолжать.`;
+        }
+        if(step1Next) step1Next.disabled = count < 3;
+      }
+
+      if(addTaskButton && taskInput){
+        function submitTask(){ addTask(taskInput.value); taskInput.value = ''; renderStep1(); taskInput.focus(); }
+        addTaskButton.addEventListener('click',submitTask);
+        taskInput.addEventListener('keydown',event => { if(event.key === 'Enter'){ event.preventDefault(); submitTask(); } });
+      }
+      if(step1Next) step1Next.addEventListener('click',() => showStep(1));
+
+      const step2Source = root.querySelector('[data-cforeset-step2-source]');
+      const step2Zones = [...root.querySelectorAll('[data-cforeset-step2-zone]')];
+      const step2Next = root.querySelector('[data-cforeset-step2-next]');
+
+      function moveStep2Task(taskId,category){
+        const task = findTask(taskId);
+        if(!task) return;
+        task.category = category;
+        clearDragSelection();
+        renderStep2();
+      }
+
+      function setupStep2Zones(){
+        step2Zones.forEach(zone => {
+          zone.addEventListener('dragover',event => { event.preventDefault(); zone.classList.add('cforeset-drop-hover'); });
+          zone.addEventListener('dragleave',event => { if(!zone.contains(event.relatedTarget)) zone.classList.remove('cforeset-drop-hover'); });
+          zone.addEventListener('drop',event => {
+            event.preventDefault();
+            zone.classList.remove('cforeset-drop-hover');
+            if(draggedId !== null) moveStep2Task(draggedId,zone.dataset.cforesetStep2Zone);
+          });
+          zone.addEventListener('click',event => {
+            if(event.target.closest('.cforeset-drag-card')) return;
+            if(selectedDragId !== null) moveStep2Task(selectedDragId,zone.dataset.cforesetStep2Zone);
+          });
+        });
+      }
+
+      function renderStep2(){
+        if(!step2Source) return;
+        clearDragSelection();
+        step2Source.innerHTML = '';
+        step2Zones.forEach(zone => { const content = zone.querySelector('.cforeset-bucket-content'); if(content) content.innerHTML = ''; });
+        state.tasks.forEach(task => {
+          const card = createTaskElement(task,{muted:task.category && task.category !== 'now'});
+          if(!task.category){ step2Source.appendChild(card); return; }
+          const zone = root.querySelector(`[data-cforeset-step2-zone="${task.category}"]`);
+          const content = zone ? zone.querySelector('.cforeset-bucket-content') : null;
+          if(content) content.appendChild(card);
+        });
+        const allAssigned = state.tasks.length > 0 && state.tasks.every(task => task.category);
+        const hasNow = state.tasks.some(task => task.category === 'now');
+        if(step2Next) step2Next.disabled = !allAssigned || !hasNow;
+      }
+      setupStep2Zones();
+      if(step2Next) step2Next.addEventListener('click',() => showStep(2));
+
+      const nowOptions = root.querySelector('[data-cforeset-now-options]');
+      const mainTask = root.querySelector('[data-cforeset-main-task]');
+      const mainTaskText = root.querySelector('[data-cforeset-main-task-text]');
+      const suggestionWrap = root.querySelector('[data-cforeset-decision-suggestions-wrap]');
+      const suggestionContainer = root.querySelector('[data-cforeset-decision-suggestions]');
+      const decisionInput = root.querySelector('[data-cforeset-decision-input]');
+      const laterBox = root.querySelector('[data-cforeset-later-box]');
+      const step3Next = root.querySelector('[data-cforeset-step3-next]');
+
+      function validateStep3(){ if(step3Next) step3Next.disabled = !state.selectedTaskId || !getDecisionQuestion(); }
+      function selectMainTask(taskId){
+        state.selectedTaskId = taskId;
+        renderStep3();
+      }
+
+      function renderDecisionSuggestions(selectedTask){
+        if(!suggestionWrap || !suggestionContainer) return;
+        suggestionContainer.innerHTML = '';
+        const preset = selectedTask && selectedTask.presetKey ? presetMap.get(selectedTask.presetKey) : null;
+        if(!preset || !preset.decisions || !preset.decisions.length){
+          suggestionWrap.classList.remove('cforeset-show');
+          return;
+        }
+        suggestionWrap.classList.add('cforeset-show');
+        const current = getDecisionQuestion();
+        preset.decisions.forEach(text => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'cforeset-suggestion-btn';
+          if(current === text) button.classList.add('cforeset-selected');
+          button.textContent = text;
+          button.addEventListener('click',() => {
+            state.decisionDrafts[selectedTask.id] = text;
+            if(decisionInput) decisionInput.value = text;
+            renderDecisionSuggestions(selectedTask);
+            validateStep3();
+          });
+          suggestionContainer.appendChild(button);
+        });
+      }
+
+      function renderStep3(){
+        if(!nowOptions) return;
+        const nowTasks = state.tasks.filter(task => task.category === 'now');
+        if(state.selectedTaskId && !nowTasks.some(task => task.id === state.selectedTaskId)) state.selectedTaskId = null;
+        if(nowTasks.length === 1 && !state.selectedTaskId) state.selectedTaskId = nowTasks[0].id;
+        nowOptions.innerHTML = '';
+        nowTasks.forEach(task => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'cforeset-choice-card';
+          if(state.selectedTaskId === task.id) button.classList.add('cforeset-selected');
+          button.textContent = task.text;
+          button.addEventListener('click',() => selectMainTask(task.id));
+          nowOptions.appendChild(button);
+        });
+        const selected = findTask(state.selectedTaskId);
+        if(selected && mainTask && mainTaskText){
+          mainTask.classList.add('cforeset-show');
+          mainTaskText.textContent = selected.text;
+        }else if(mainTask){
+          mainTask.classList.remove('cforeset-show');
+        }
+        renderDecisionSuggestions(selected);
+        if(decisionInput) decisionInput.value = getDecisionQuestion();
+        if(laterBox){
+          const otherNow = nowTasks.filter(task => task.id !== state.selectedTaskId);
+          if(otherNow.length) laterBox.innerHTML = `<strong>Вернуться позже:</strong> ${otherNow.map(task => task.text).join(' · ')}`;
+          else laterBox.innerHTML = `<strong>Сейчас в фокусе одна задача.</strong> Остальные вы уже отложили, передали или вынесли за пределы текущего решения.`;
+        }
+        validateStep3();
+      }
+
+      if(decisionInput){
+        decisionInput.addEventListener('input',() => {
+          if(state.selectedTaskId) state.decisionDrafts[state.selectedTaskId] = decisionInput.value;
+          const selected = findTask(state.selectedTaskId);
+          renderDecisionSuggestions(selected);
+          validateStep3();
+        });
+      }
+      if(step3Next) step3Next.addEventListener('click',() => showStep(3));
+
+      const questionStep4 = root.querySelector('[data-cforeset-question-step4]');
+      const step4Zones = [...root.querySelectorAll('[data-cforeset-step4-zone]')];
+      const step4Next = root.querySelector('[data-cforeset-step4-next]');
+      const step4MoveRest = root.querySelector('[data-cforeset-step4-move-rest]');
+      const postSort = root.querySelector('[data-cforeset-post-sort]');
+      function getStep4Tasks(){ return state.tasks.filter(task => task.id !== state.selectedTaskId); }
+      function moveStep4Task(taskId,target){ state.relevance[taskId] = target === 'source' ? null : target; clearDragSelection(); renderStep4(); }
+      function moveRemainingStep4Tasks(){
+        getStep4Tasks().forEach(task => {
+          if(!state.relevance[task.id] || state.relevance[task.id] === 'source') state.relevance[task.id] = 'notnow';
+        });
+        clearDragSelection();
+        renderStep4();
+      }
+      function setupStep4Zones(){
+        step4Zones.forEach(zone => {
+          zone.addEventListener('dragover',event => { event.preventDefault(); zone.classList.add('cforeset-drop-hover'); });
+          zone.addEventListener('dragleave',event => { if(!zone.contains(event.relatedTarget)) zone.classList.remove('cforeset-drop-hover'); });
+          zone.addEventListener('drop',event => { event.preventDefault(); zone.classList.remove('cforeset-drop-hover'); if(draggedId !== null) moveStep4Task(draggedId,zone.dataset.cforesetStep4Zone); });
+          zone.addEventListener('click',event => { if(event.target.closest('.cforeset-drag-card')) return; if(selectedDragId !== null) moveStep4Task(selectedDragId,zone.dataset.cforesetStep4Zone); });
+        });
+      }
+      function renderStep4(){
+        if(questionStep4) questionStep4.textContent = getDecisionQuestion();
+        clearDragSelection();
+        step4Zones.forEach(zone => { const content = zone.querySelector('.cforeset-zone-content'); if(content) content.innerHTML = ''; });
+        const tasks = getStep4Tasks();
+        tasks.forEach(task => {
+          const status = state.relevance[task.id] || 'source';
+          const card = createTaskElement(task,{muted:status === 'notnow'});
+          const zone = root.querySelector(`[data-cforeset-step4-zone="${status}"]`);
+          const content = zone ? zone.querySelector('.cforeset-zone-content') : null;
+          if(content) content.appendChild(card);
+        });
+        const remaining = tasks.filter(task => !state.relevance[task.id] || state.relevance[task.id] === 'source').length;
+        const allSorted = remaining === 0;
+        if(step4Next) step4Next.disabled = !allSorted;
+        if(step4MoveRest){
+          step4MoveRest.disabled = remaining === 0;
+          step4MoveRest.style.display = remaining === 0 ? 'none' : '';
+        }
+        if(postSort) postSort.classList.toggle('cforeset-show',allSorted);
+      }
+      setupStep4Zones();
+      if(step4MoveRest) step4MoveRest.addEventListener('click',moveRemainingStep4Tasks);
+      if(step4Next) step4Next.addEventListener('click',() => showStep(4));
+
+      const focusShapes = [...root.querySelectorAll('[data-cforeset-focus-shape]')];
+      const focusResult = root.querySelector('[data-cforeset-focus-result]');
+      const step5Next = root.querySelector('[data-cforeset-step5-next]');
+      focusShapes.forEach(button => button.addEventListener('click',() => {
+        const number = Number(button.dataset.cforesetNumber);
+        const isTarget = button.dataset.cforesetTarget === 'true';
+
+        if(isTarget && number < state.focusExpected) return;
+
+        if(isTarget && number === state.focusExpected){
+          button.classList.add('cforeset-number-done');
+          button.setAttribute('aria-pressed','true');
+          state.focusExpected += 1;
+
+          if(state.focusExpected === 9){
+            if(focusResult) focusResult.classList.add('cforeset-show');
+            if(step5Next) step5Next.disabled = false;
+          }
+          return;
+        }
+
+        button.classList.remove('cforeset-number-miss');
+        void button.offsetWidth;
+        button.classList.add('cforeset-number-miss');
+      }));
+      if(step5Next) step5Next.addEventListener('click',() => showStep(5));
+
+      const questionStep6 = root.querySelector('[data-cforeset-question-step6]');
+      const knownInput = root.querySelector('[data-cforeset-known]');
+      const assumeInput = root.querySelector('[data-cforeset-assume]');
+      const missingInput = root.querySelector('[data-cforeset-missing]');
+      const enoughInput = root.querySelector('[data-cforeset-enough]');
+      const nextActionInput = root.querySelector('[data-cforeset-next-action]');
+      const step6Next = root.querySelector('[data-cforeset-step6-next]');
+      function validateStep6(){
+        const missingReady = state.enough || state.missing.trim().length > 0;
+        const actionReady = state.nextAction.trim().length > 0;
+        if(step6Next) step6Next.disabled = !missingReady || !actionReady;
+      }
+      function renderStep6(){
+        if(questionStep6) questionStep6.textContent = getDecisionQuestion();
+        if(knownInput) knownInput.value = state.known;
+        if(assumeInput) assumeInput.value = state.assume;
+        if(missingInput){ missingInput.value = state.missing; missingInput.disabled = state.enough; }
+        if(enoughInput) enoughInput.checked = state.enough;
+        if(nextActionInput) nextActionInput.value = state.nextAction;
+        validateStep6();
+      }
+      if(knownInput) knownInput.addEventListener('input',() => { state.known = knownInput.value; });
+      if(assumeInput) assumeInput.addEventListener('input',() => { state.assume = assumeInput.value; });
+      if(missingInput) missingInput.addEventListener('input',() => { state.missing = missingInput.value; validateStep6(); });
+      if(enoughInput) enoughInput.addEventListener('change',() => { state.enough = enoughInput.checked; if(missingInput) missingInput.disabled = state.enough; validateStep6(); });
+      if(nextActionInput) nextActionInput.addEventListener('input',() => { state.nextAction = nextActionInput.value; validateStep6(); });
+      if(step6Next) step6Next.addEventListener('click',() => showStep(6));
+
+      const finalQuestion = root.querySelector('[data-cforeset-final-question]');
+      const finalMissing = root.querySelector('[data-cforeset-final-missing]');
+      const finalAction = root.querySelector('[data-cforeset-final-action]');
+      const finishButton = root.querySelector('[data-cforeset-finish]');
+      const finishedMessage = root.querySelector('[data-cforeset-finished-message]');
+      function renderFinal(){
+        if(finalQuestion) finalQuestion.textContent = getDecisionQuestion();
+        if(finalMissing) finalMissing.textContent = state.enough ? 'Данных для следующего шага достаточно.' : state.missing;
+        if(finalAction) finalAction.textContent = state.nextAction;
+      }
+      if(finishButton) finishButton.addEventListener('click',() => {
+        finishButton.disabled = true;
+        finishButton.textContent = 'Готово';
+        if(finishedMessage) finishedMessage.classList.add('cforeset-show');
+      });
+
+      renderStep1();
+      showStep(0);
+    }
+
+    init();
+  });
+})();
+</script>
+</body>
+</html>
