@@ -85,6 +85,21 @@
 .cforeset-drag-card:active{cursor:grabbing}
 .cforeset-drag-card.cforeset-selected{border:2px solid var(--cforeset-blue);background:var(--cforeset-blue-light)}
 .cforeset-muted-card{opacity:.72}
+
+/* Шаг 2: выбор области из выпадающего списка */
+.cforeset-step2-card-wrap{position:relative;min-width:0;animation:cforesetStep2Move .16s ease}
+@keyframes cforesetStep2Move{from{opacity:.55;transform:translateY(-3px)}to{opacity:1;transform:none}}
+.cforeset-step2-card{position:relative;width:100%;padding:12px 36px 12px 13px;border:1px solid #DCD8D0;border-radius:12px;background:#fff;color:var(--cforeset-graphite);box-shadow:0 3px 9px rgba(42,47,51,.04);font-size:14px;font-weight:700;line-height:1.4;text-align:left;cursor:pointer;transition:border-color .12s ease,background .12s ease,box-shadow .12s ease,opacity .12s ease}
+.cforeset-step2-card:hover{border-color:#BFC9D3;box-shadow:0 5px 12px rgba(42,47,51,.07)}
+.cforeset-step2-card::after{content:"⌄";position:absolute;right:12px;top:50%;transform:translateY(-55%);color:var(--cforeset-blue);font-size:18px;font-weight:900;transition:transform .12s ease}
+.cforeset-step2-card-wrap.cforeset-open .cforeset-step2-card{border-color:var(--cforeset-blue);background:#F8FAFC}
+.cforeset-step2-card-wrap.cforeset-open .cforeset-step2-card::after{transform:translateY(-45%) rotate(180deg)}
+.cforeset-step2-menu{display:none;margin-top:6px;padding:6px;border:1px solid #D8DCE0;border-radius:11px;background:#fff;box-shadow:0 8px 20px rgba(42,47,51,.09)}
+.cforeset-step2-card-wrap.cforeset-open .cforeset-step2-menu{display:grid;gap:4px}
+.cforeset-step2-option{width:100%;padding:8px 9px;border:0;border-radius:8px;background:transparent;color:var(--cforeset-graphite);font-size:12px;font-weight:800;line-height:1.3;text-align:left;cursor:pointer}
+.cforeset-step2-option:hover{background:var(--cforeset-blue-light)}
+.cforeset-step2-option.cforeset-current{background:var(--cforeset-sage-light);color:#576551}
+.cforeset-step2-option.cforeset-current::before{content:"✓ ";font-weight:900}
 .cforeset-source-tray{margin-bottom:17px;padding:15px;border:1px solid var(--cforeset-border);border-radius:15px;background:#fff}
 .cforeset-source-title{margin-bottom:10px;color:var(--cforeset-muted);font-size:12px;font-weight:900;text-transform:uppercase}
 .cforeset-source-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
@@ -177,8 +192,8 @@
 .cforeset-finished-message{display:none;margin-top:14px;color:#5C6C57;font-weight:900}.cforeset-finished-message.cforeset-show{display:block}
 .cforeset-widget button:focus-visible,.cforeset-widget input:focus-visible,.cforeset-widget textarea:focus-visible,.cforeset-widget [tabindex="0"]:focus-visible{outline:3px solid rgba(111,134,163,.28);outline-offset:2px}
 @media(max-width:1000px){.cforeset-buckets{grid-template-columns:repeat(2,minmax(0,1fr))}.cforeset-bucket:last-child{grid-column:1/-1}.cforeset-decision-suggestions{grid-template-columns:1fr 1fr}}
-@media(max-width:800px){.cforeset-relevance-layout{grid-template-columns:1fr}.cforeset-decision-grid{grid-template-columns:1fr}.cforeset-preset-groups{grid-template-columns:1fr}}
-@media(max-width:650px){.cforeset-widget{margin:0}.cforeset-shell{border-left:0;border-right:0;border-radius:0}.cforeset-top{padding:20px 15px 16px}.cforeset-course-title{font-size:21px}.cforeset-progress-row{align-items:flex-start;flex-direction:column;gap:8px}.cforeset-progress{width:100%}.cforeset-content{padding:24px 14px 28px}.cforeset-screen-head h3{font-size:23px}.cforeset-task-list,.cforeset-source-cards,.cforeset-now-options,.cforeset-buckets,.cforeset-relevance-targets,.cforeset-decision-suggestions{grid-template-columns:1fr}.cforeset-bucket:last-child{grid-column:auto}.cforeset-bucket{min-height:110px}.cforeset-relevance-source,.cforeset-relevance-zone{min-height:120px}.cforeset-actions,.cforeset-actions-between{flex-direction:column}.cforeset-btn{width:100%}.cforeset-task-input-row{grid-template-columns:minmax(0,1fr) 48px}.cforeset-focus-field{grid-template-columns:repeat(3,minmax(72px,1fr));grid-auto-rows:82px;gap:10px;padding:16px 8px}.cforeset-focus-shape:nth-child(n){margin:0}.cforeset-shape-circle{width:62px;height:62px}.cforeset-shape-square{width:58px;height:58px}.cforeset-shape-diamond{width:60px;height:60px}.cforeset-shape-rect{width:82px;height:52px}}
+@media(max-width:800px){.cforeset-relevance-layout{grid-template-columns:1fr}.cforeset-decision-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.cforeset-widget{margin:0}.cforeset-shell{border-left:0;border-right:0;border-radius:0}.cforeset-top{padding:20px 15px 16px}.cforeset-course-title{font-size:21px}.cforeset-progress-row{align-items:flex-start;flex-direction:column;gap:8px}.cforeset-progress{width:100%}.cforeset-content{padding:24px 14px 28px}.cforeset-screen-head h3{font-size:23px}.cforeset-preset-groups,.cforeset-task-list,.cforeset-source-cards,.cforeset-now-options,.cforeset-buckets,.cforeset-relevance-targets,.cforeset-decision-suggestions{grid-template-columns:1fr}.cforeset-bucket:last-child{grid-column:auto}.cforeset-bucket{min-height:110px}.cforeset-relevance-source,.cforeset-relevance-zone{min-height:120px}.cforeset-actions,.cforeset-actions-between{flex-direction:column}.cforeset-btn{width:100%}.cforeset-task-input-row{grid-template-columns:minmax(0,1fr) 48px}.cforeset-focus-field{grid-template-columns:repeat(3,minmax(72px,1fr));grid-auto-rows:82px;gap:10px;padding:16px 8px}.cforeset-focus-shape:nth-child(n){margin:0}.cforeset-shape-circle{width:62px;height:62px}.cforeset-shape-square{width:58px;height:58px}.cforeset-shape-diamond{width:60px;height:60px}.cforeset-shape-rect{width:82px;height:52px}}
 </style>
 </head>
 <body>
@@ -231,7 +246,7 @@
         <div class="cforeset-screen-head">
           <div class="cforeset-screen-meta">Шаг 2 из 7 <span class="cforeset-time">≈ 1,5 минуты</span></div>
           <h3>Решите, что с этим делать</h3>
-          <p>Сейчас не нужно выполнять эти задачи. Достаточно определить судьбу каждой.</p>
+          <p>Сейчас не нужно выполнять эти задачи. Нажмите на карточку и выберите, что с ней делать.</p>
         </div>
         <div class="cforeset-source-tray">
           <div class="cforeset-source-title">Пока не распределено</div>
@@ -259,7 +274,7 @@
             <div class="cforeset-bucket-content"></div>
           </div>
         </div>
-        <div class="cforeset-step-note">Можно перетаскивать карточки или выбрать карточку и затем нажать нужную область</div>
+        <div class="cforeset-step-note">Нажмите на карточку — под ней откроется список областей. Выберите нужную, и карточка сама переместится.</div>
         <div class="cforeset-actions cforeset-actions-between">
           <button type="button" class="cforeset-btn cforeset-btn-back" data-cforeset-prev="1">← Назад</button>
           <button type="button" class="cforeset-btn cforeset-btn-main" data-cforeset-step2-next disabled>Оставить главное →</button>
@@ -447,6 +462,7 @@
       let taskIdCounter = 1;
       let draggedId = null;
       let selectedDragId = null;
+      let step2OpenTaskId = null;
 
       const screens = [...root.querySelectorAll('[data-cforeset-screen]')];
       const progressItems = [...root.querySelectorAll('.cforeset-progress-item')];
@@ -613,47 +629,95 @@
       const step2Zones = [...root.querySelectorAll('[data-cforeset-step2-zone]')];
       const step2Next = root.querySelector('[data-cforeset-step2-next]');
 
+      const step2Categories = [
+        {key:'now',label:'Сделать сейчас'},
+        {key:'later',label:'Запланировать'},
+        {key:'wait',label:'Жду данные'},
+        {key:'delegate',label:'Передать'},
+        {key:'drop',label:'Не делать'}
+      ];
+
       function moveStep2Task(taskId,category){
         const task = findTask(taskId);
         if(!task) return;
         task.category = category;
-        clearDragSelection();
+        step2OpenTaskId = null;
         renderStep2();
       }
 
-      function setupStep2Zones(){
-        step2Zones.forEach(zone => {
-          zone.addEventListener('dragover',event => { event.preventDefault(); zone.classList.add('cforeset-drop-hover'); });
-          zone.addEventListener('dragleave',event => { if(!zone.contains(event.relatedTarget)) zone.classList.remove('cforeset-drop-hover'); });
-          zone.addEventListener('drop',event => {
-            event.preventDefault();
-            zone.classList.remove('cforeset-drop-hover');
-            if(draggedId !== null) moveStep2Task(draggedId,zone.dataset.cforesetStep2Zone);
+      function createStep2TaskElement(task){
+        const wrap = document.createElement('div');
+        wrap.className = 'cforeset-step2-card-wrap';
+        if(step2OpenTaskId === task.id) wrap.classList.add('cforeset-open');
+
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'cforeset-step2-card';
+        if(task.category && task.category !== 'now') card.classList.add('cforeset-muted-card');
+        card.textContent = task.text;
+        card.setAttribute('aria-expanded',step2OpenTaskId === task.id ? 'true' : 'false');
+        card.setAttribute('aria-haspopup','menu');
+
+        const menu = document.createElement('div');
+        menu.className = 'cforeset-step2-menu';
+        menu.setAttribute('role','menu');
+
+        step2Categories.forEach(category => {
+          const option = document.createElement('button');
+          option.type = 'button';
+          option.className = 'cforeset-step2-option';
+          if(task.category === category.key) option.classList.add('cforeset-current');
+          option.textContent = category.label;
+          option.setAttribute('role','menuitem');
+          option.addEventListener('click',event => {
+            event.stopPropagation();
+            moveStep2Task(task.id,category.key);
           });
-          zone.addEventListener('click',event => {
-            if(event.target.closest('.cforeset-drag-card')) return;
-            if(selectedDragId !== null) moveStep2Task(selectedDragId,zone.dataset.cforesetStep2Zone);
-          });
+          menu.appendChild(option);
         });
+
+        card.addEventListener('click',event => {
+          event.stopPropagation();
+          step2OpenTaskId = step2OpenTaskId === task.id ? null : task.id;
+          renderStep2();
+        });
+
+        wrap.appendChild(card);
+        wrap.appendChild(menu);
+        return wrap;
       }
 
       function renderStep2(){
         if(!step2Source) return;
-        clearDragSelection();
         step2Source.innerHTML = '';
-        step2Zones.forEach(zone => { const content = zone.querySelector('.cforeset-bucket-content'); if(content) content.innerHTML = ''; });
+        step2Zones.forEach(zone => {
+          const content = zone.querySelector('.cforeset-bucket-content');
+          if(content) content.innerHTML = '';
+        });
+
         state.tasks.forEach(task => {
-          const card = createTaskElement(task,{muted:task.category && task.category !== 'now'});
-          if(!task.category){ step2Source.appendChild(card); return; }
+          const card = createStep2TaskElement(task);
+          if(!task.category){
+            step2Source.appendChild(card);
+            return;
+          }
           const zone = root.querySelector(`[data-cforeset-step2-zone="${task.category}"]`);
           const content = zone ? zone.querySelector('.cforeset-bucket-content') : null;
           if(content) content.appendChild(card);
         });
+
         const allAssigned = state.tasks.length > 0 && state.tasks.every(task => task.category);
         const hasNow = state.tasks.some(task => task.category === 'now');
         if(step2Next) step2Next.disabled = !allAssigned || !hasNow;
       }
-      setupStep2Zones();
+
+      root.addEventListener('click',event => {
+        if(state.step !== 1 || step2OpenTaskId === null) return;
+        if(event.target.closest('.cforeset-step2-card-wrap')) return;
+        step2OpenTaskId = null;
+        renderStep2();
+      });
+
       if(step2Next) step2Next.addEventListener('click',() => showStep(2));
 
       const nowOptions = root.querySelector('[data-cforeset-now-options]');
